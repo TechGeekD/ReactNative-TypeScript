@@ -2,7 +2,7 @@ import './js/App/Config/ReactotronConfig'
 import ReactNative, { AppRegistry, YellowBox } from 'react-native'
 import App from './js/App/Containers/App'
 
-YellowBox.ignoreWarnings(['Require cycle:']);
+YellowBox.ignoreWarnings(['Require cycle:'])
 
 try {
   ReactNative.I18nManager.allowRTL(false) // Because We Using Our Custom Rtl
@@ -10,4 +10,4 @@ try {
   console.log(e)
 }
 
-AppRegistry.registerComponent('ReactNativeTS', () => App);
+AppRegistry.registerComponent('ReactNativeTS', () => App)
