@@ -9,7 +9,8 @@ export interface ApplicationState {
   github: any,
   search: any,
   appSettings: any,
-  login: any
+  login: any,
+  user: any
 }
 /* ------------- Assemble The Reducers ------------- */
 export const reducers: Reducer<ApplicationState> = combineReducers({
@@ -18,7 +19,8 @@ export const reducers: Reducer<ApplicationState> = combineReducers({
   github: require("./Github/GithubRedux").reducer,
   search: require("./Search/SearchRedux").reducer,
   appSettings: require('./AppSettings/AppSettingsRedux').reducer,
-  login: require("./Login/LoginRedux").reducer
+  login: require("./Login/LoginRedux").reducer,
+  user: require("./User/UserRedux").reducer
 });
 
 export default () => {

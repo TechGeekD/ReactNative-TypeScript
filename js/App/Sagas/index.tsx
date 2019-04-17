@@ -14,6 +14,8 @@ import { AuthTypes } from "../Redux/Login/LoginActions";
 import { startup, getUsersList } from "./StartupSagas";
 import { getUserAvatar } from "./GithubSagas";
 import { getUserForAuth } from "./AuthSagas";
+import { getUsersTodoList } from "./UserSagas";
+import { UserTypes } from "../Redux/User/UserActions";
 
 /* ------------- API ------------- */
 
@@ -32,6 +34,7 @@ export default function* root() {
     takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api),
 
     takeLatest(AuthTypes.USER_LIST_REQUEST, getUsersList, api),
-    takeLatest(AuthTypes.USER_AUTH_REQUEST, getUserForAuth, api)
+    takeLatest(AuthTypes.USER_AUTH_REQUEST, getUserForAuth, api),
+    takeLatest(UserTypes.USER_TODO_LIST_REQUEST, getUsersTodoList, api)
   ]);
 }

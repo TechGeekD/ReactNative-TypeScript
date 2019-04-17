@@ -4,6 +4,7 @@ import { Component } from "react";
 // Styles
 import styles from "./Styles/HomeStyle";
 import {
+  Text,
   View,
   Button,
   Icon,
@@ -13,7 +14,11 @@ import {
   Left,
   Title,
   Right,
-  H1
+  H1,
+  Content,
+  List,
+  ListItem,
+  Switch
 } from "native-base";
 import { NavigationActions } from "react-navigation";
 
@@ -21,17 +26,55 @@ interface HomeProps {
   userName?: string;
   details?: any;
   navigation?: any;
+  todoList?: any;
   logoutUser?(): void;
+  getUserTodoList?(userId: string): void;
+}
+
+interface HomeState {
+  todoList?: any;
+  userId?: string;
 }
 
 const navigateAction = NavigationActions.navigate({
   routeName: "LoginScreen"
 });
 
-export default class HomeComponent extends Component<HomeProps> {
+export default class HomeComponent extends Component<HomeProps, HomeState> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      userId: "",
+      todoList: []
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let updated = {};
+
+    if (
+      nextProps.todoList.length !== prevState.todoList.length ||
+      nextProps.details.id !== prevState.userId
+    ) {
+      updated = {
+        ...updated,
+        todoList: nextProps.todoList,
+        userId: nextProps.details.id
+      };
+    }
+
+    return updated;
+  }
+
+  componentDidMount() {
+    this.props.getUserTodoList(this.state.userId);
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      todoList: [],
+      userId: ""
+    });
   }
 
   render() {
@@ -60,17 +103,57 @@ export default class HomeComponent extends Component<HomeProps> {
             </Button>
           </Right>
         </Header>
-        <View
-          style={{
-            flex: 0.9,
-            justifyContent: "center",
-            alignItems: "center",
-            alignContent: "center"
-          }}
-        >
-          <H1 style={{ color: "red" }}>Welcome to Home</H1>
-          <H1 style={{ color: "red" }}>{this.props.details.name}</H1>
-        </View>
+        <Content>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              alignContent: "center"
+            }}
+          >
+            <H1 style={{ color: "red" }}>{this.props.details.name}</H1>
+          </View>
+          <View
+            style={{
+              flex: 0.2
+            }}
+          >
+            <List>
+              {this.state.todoList.length > 0 &&
+                this.state.todoList.map((todo, index) => (
+                  <ListItem key={todo.id} icon>
+                    <Left>
+                      <Button style={{ backgroundColor: "#FF9501" }}>
+                        <Icon
+                          type="AntDesign"
+                          name={todo.completed ? "tag" : "tago"}
+                        />
+                      </Button>
+                    </Left>
+                    <Body>
+                      <Text numberOfLines={1} style={{ color: "white" }}>
+                        {todo.title}
+                      </Text>
+                    </Body>
+                    <Right>
+                      <Switch
+                        onValueChange={value => {
+                          this.setState(state => {
+                            let todoList = JSON.parse(
+                              JSON.stringify(state.todoList)
+                            );
+                            todoList[index].completed = value;
+                            return { todoList };
+                          });
+                        }}
+                        value={todo.completed}
+                      />
+                    </Right>
+                  </ListItem>
+                ))}
+            </List>
+          </View>
+        </Content>
       </Container>
     );
   }

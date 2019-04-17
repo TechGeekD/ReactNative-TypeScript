@@ -41,6 +41,7 @@ const create = (baseURL = "https://api.github.com/") => {
   const getUserRNTS = (username: string, password: string) =>
     api.get("users", { username, id: password });
   const getUserListRNTS = () => api.get("users");
+  const getUsersToDoListRNTS = (userId: string) => api.get("todos", { userId });
   // ------
   // STEP 3
   // ------
@@ -59,7 +60,8 @@ const create = (baseURL = "https://api.github.com/") => {
     getRate,
     getUser,
     getUserRNTS,
-    getUserListRNTS
+    getUserListRNTS,
+    getUsersToDoListRNTS
   };
 };
 
