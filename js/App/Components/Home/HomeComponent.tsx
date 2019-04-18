@@ -53,12 +53,20 @@ export default class HomeComponent extends Component<HomeProps, HomeState> {
     let updated = {};
 
     if (
-      nextProps.todoList.length !== prevState.todoList.length ||
-      nextProps.details.id !== prevState.userId
+      nextProps.todoList.length > 0 &&
+      JSON.stringify(nextProps.todoList[0]) !==
+        JSON.stringify(prevState.todoList[0])
     ) {
       updated = {
         ...updated,
         todoList: nextProps.todoList,
+        userId: nextProps.details.id
+      };
+    }
+
+    if (nextProps.details.id !== prevState.userId) {
+      updated = {
+        ...updated,
         userId: nextProps.details.id
       };
     }
