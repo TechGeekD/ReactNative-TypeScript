@@ -29,6 +29,7 @@ interface HomeProps {
   todoList?: any;
   logoutUser?(): void;
   getUserTodoList?(userId: string): void;
+  userTodoListUpdate?(update: any, index: number): void;
 }
 
 interface HomeState {
@@ -84,6 +85,16 @@ export default class HomeComponent extends Component<HomeProps, HomeState> {
       userId: ""
     });
   }
+
+  updateTodoList = (update, index) => {
+    this.setState(state => {
+      let todoList = JSON.parse(JSON.stringify(state.todoList));
+      todoList[index] = { ...todoList[index], ...update };
+
+      this.props.userTodoListUpdate(todoList[index], index);
+      return { todoList };
+    });
+  };
 
   render() {
     return (
@@ -145,14 +156,8 @@ export default class HomeComponent extends Component<HomeProps, HomeState> {
                     </Body>
                     <Right>
                       <Switch
-                        onValueChange={value => {
-                          this.setState(state => {
-                            let todoList = JSON.parse(
-                              JSON.stringify(state.todoList)
-                            );
-                            todoList[index].completed = value;
-                            return { todoList };
-                          });
+                        onValueChange={completed => {
+                          this.updateTodoList({ completed }, index);
                         }}
                         value={todo.completed}
                       />

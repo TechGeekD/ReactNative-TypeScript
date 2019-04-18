@@ -15,7 +15,9 @@ const mapDispatchToProps = dispatch => {
   return {
     logoutUser: () => dispatch({ type: AuthTypes.USER_LOGOUT }),
     getUserTodoList: (userId: string) =>
-      dispatch({ type: UserTypes.USER_TODO_LIST_REQUEST, userId })
+      dispatch({ type: UserTypes.USER_TODO_LIST_REQUEST, userId }),
+    userTodoListUpdate: (update: any, index: number) =>
+      dispatch({ type: UserTypes.USER_TODO_LIST_UPDATE, update, index })
   };
 };
 

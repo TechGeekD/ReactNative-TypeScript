@@ -4,14 +4,17 @@
 # *   Script for React-Native Commands i.e. run pakcakge, run on platform or reload app
 # *
 # * Usage:
-# *   $ ./run.sh [param1 [param2]]
+# *   $ ./run.sh [param1 [param2 [param3]]]
 # *
 # * param1 (optional):
 # *     - 'r' or 'p' for silent run [if passed script will run in silent mode]
-# *     - 'rr' to reload app
+# *     - 'rr' to reload app [for now supported on android device only]
 # *     - 'rd' to open react-devtools
 # * param2 (optional):
 # *     - 'a' or 'A' for android & 'i' or 'I' for ios [can pass if param1='r']
+# *
+# * param3 (optional):
+# *     - 'deviceName' for ios [can pass if param1='r' & param2='i' or 'I']
 # *
 # * EXAMPLE:
 # *     - "./run.sh rr" or "./run.sh RR" [will reload app]
@@ -20,6 +23,11 @@
 # *     - "./run.sh r" [will run app on default platform android]
 # *     - "./run.sh r a" or "./run.sh r A" [will run app on android platform]
 # *     - "./run.sh r i" or "./run.sh r I" [will run app on ios platform]
+# *     - "./run.sh r i iPad" or "./run.sh r I iPad" [will run app on ios device named in param3]
+# *
+# * NOTE:
+# *    - make sure ios-deploy is installed for ios build to run on physical device
+# *    - if not please install it using `npm install -g ios-deploy`
 
 ERR_WDDTH() {
   echo ""
@@ -67,7 +75,12 @@ installReactDevtools() {
 runOnPlatform() {
   clear
   echo "Running On Platform" $platform
-  react-native run-$platform
+  if [ "${platform}" == "ios" ]
+  then
+    react-native run-$platform --device "$3"
+  else
+    react-native run-$platform
+  fi
 }
 
 runPackagerAndExit() {
@@ -90,7 +103,7 @@ runReactDevtools() {
     echo ""
     echo "  *** Running React-Devtools ***"
     echo ""
-    echo "[Please enable Remote JS Debugging and/or Reload app to connect]"
+    echo "[Please enable Remote JS Debugging and Reload app to connect]"
     react-devtools
     exit
   fi
@@ -147,7 +160,7 @@ runMenu() {
 
   checkAndSetPlatform "$platform"
 
-  runOnPlatform
+  runOnPlatform "$@"
 }
 
 debugMenu() {
@@ -185,7 +198,7 @@ elif [ "${1}" == "r" ] || [ "${1}" == "R" ]
 then
   setPlatformValue "$2" "a"
   checkAndSetPlatform "$platform"
-  runOnPlatform
+  runOnPlatform "$@"
   exit
 elif [ "${1}" == "p" ] || [ "${1}" == "P" ]
 then
@@ -209,7 +222,7 @@ fi
 
 if [ -z "${menu}" ] || [ "${menu}" == 'r' ] || [ "${menu}" == 'R' ]
 then
-  runMenu
+  runMenu "$@"
 elif [ "${menu}" == 'd' ] || [ "${menu}" == 'D' ]
 then
   debugMenu
